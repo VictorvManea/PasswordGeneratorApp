@@ -1,0 +1,85 @@
+<p>
+    Generate a random password. Introduce the desireble size here!
+  </p>
+  
+  <input type="text" id="stdin"/>
+  <p id="credits"></p>
+  <form id="form">
+    <button id="run">Generate</button>
+  </form>
+  <code id="output"></code>
+  
+  <script>
+  var run = document.getElementById("run");
+  
+  run.addEventListener("click", function (e) {
+    
+    e.preventDefault();
+    
+    var stdin = document.getElementById("stdin");
+    var form = document.getElementById("form");
+    var credits = document.getElementById("credits");
+    var output = document.getElementById("output");
+    
+    output.innerHTML = "Loading...";
+    
+    console.log(stdin.value);
+    
+    var obj = {};
+    obj["clientId"] = "2b22cf1920a2343e7e9c726100cc1cea";
+    obj["clientSecret"] = "153d7765340260abb010a0acee23797074d7e286e911b5308b9246aab2758056";
+    obj["script"] = "import java.util.ArrayList;\r\nimport java.util.Locale;\r\nimport java.util.Random;\r\nimport java.util.Scanner;\r\n\r\npublic class Main {\r\n\r\n    public static String chars = \"qwertyuiopasdfghjklzxcvbnm\";\r\n    public static String nr = \"1234567890\";\r\n    public static String symbols = \"!@#$%^&*()_+}{:?>\";\r\n    public static String upperCase = chars.toUpperCase();\r\n\r\n\r\n    public static ArrayList<String> charPass = new ArrayList<>();\r\n    public static ArrayList<String> nrPass = new ArrayList<>();\r\n    public static ArrayList<String> symbPass = new ArrayList<>();\r\n    public static ArrayList<String> upperCasePass = new ArrayList<>();\r\n\r\n\r\n\r\n    public static Random rnd = new Random();\r\n    public static Scanner scan = new Scanner(System.in);\r\n\r\n\r\n\r\n\r\n    public static void main(String[] args) {\r\n\r\n        System.out.println(finalPassGenerator());\r\n    }\r\n\r\n    public static String alphaGenerator() {\r\n\r\n        int size = chars.length();\r\n\r\n        for (int i = 0; i < size; i++){\r\n            charPass.add(String.valueOf(chars.charAt(rnd.nextInt(chars.length()))));\r\n        }\r\n        String password = String.join(\"\", charPass);\r\n        return password;\r\n\r\n    }\r\n    public static String nrGenerator() {\r\n\r\n        int size = nr.length();\r\n\r\n        for (int i = 0; i < size; i++){\r\n            nrPass.add(String.valueOf(nr.charAt(rnd.nextInt(nr.length()))));\r\n        }\r\n        String password = String.join(\"\", nrPass);\r\n        return password;\r\n\r\n    }\r\n    public static String symbGenerator() {\r\n\r\n        int size = 5;\r\n\r\n        for (int i = 0; i < size; i++){\r\n            symbPass.add(String.valueOf(symbols.charAt(rnd.nextInt(symbols.length()))));\r\n        }\r\n        String password1 = String.join(\"\", symbPass);\r\n        return password1;\r\n    }\r\n    public static String upperCaseGenerator() {\r\n\r\n        int size = upperCase.length();\r\n\r\n        for (int i = 0; i < size; i++){\r\n            upperCasePass.add(String.valueOf(upperCase.charAt(rnd.nextInt(upperCase.length()))));\r\n        }\r\n        String password2 = String.join(\"\", upperCasePass);\r\n        return password2;\r\n    }\r\n\r\n    public static String finalPassGenerator() {\r\n        String finalPass = alphaGenerator() + nrGenerator() + symbGenerator() + upperCaseGenerator();\r\n        ArrayList<String> finalPassArr = new ArrayList<>();\r\n        int passSize = scan.nextInt();\r\n        for (int i = 0; i < passSize; i++){\r\n            finalPassArr.add(String.valueOf(finalPass.charAt(rnd.nextInt(finalPass.length()))));\r\n        }\r\n        return String.join(\"\", finalPassArr);\r\n    }\r\n}"
+    obj["language"] = "java";
+    obj["versionIndex"] = "0";
+    obj["stdin"] = stdin.value;
+    var jsonStr = JSON.stringify(obj);
+    
+    console.log(jsonStr);
+    
+    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    const url = "https://api.jdoodle.com/v1/execute";
+    fetch(proxyurl + url, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: jsonStr
+    })
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      console.log(data);
+      var outputStr = data.output;
+      console.log(outputStr);
+      var formattedOutput = outputStr.replace(/(?:\r\n|\r|\n)/g, '<br>');
+      output.innerHTML = formattedOutput;
+    })
+    .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+    
+    const creditsUrl = "https://api.jdoodle.com/v1/credit-spent";
+    fetch(proxyurl + creditsUrl, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: jsonStr
+    })
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      console.log(data);
+      var creditsLeft = 200 - data.used;
+      console.log(credits);
+      credits.innerHTML = "Runs left: " + creditsLeft;
+    })
+    .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+    
+    
+    
+    
+  });
+  </script>
